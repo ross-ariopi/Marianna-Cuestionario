@@ -134,7 +134,7 @@ footer{font-size:13px;color:var(--suave);text-align:center;padding-block:0 40px}
   <div class="wrap">
     <div class="eyebrow">Memo Es × Marianna Postrería</div>
     <h1>Cuestionario de insumos</h1>
-    <p>Aquí juntamos todo lo que necesitamos para construir su sitio: confirmar su marca y reunir el catálogo, las fotos y los textos. Pueden contestar por partes y entre varias personas; cada respuesta se guarda sola.</p>
+    <p>Aquí juntamos todo lo que necesitamos para construir su sitio: confirmar su marca y reunir el catálogo, las fotos y los textos. Cada respuesta se guarda sola. Si cierran la página, al volver a abrirla en el mismo navegador encontrarán lo que ya llenaron.</p>
     <div class="meta-row"><span>27 de octubre, 2026</span><span>Sitio web</span><span>4 Positive Impact</span></div>
     <div class="rule"></div>
   </div>
@@ -367,15 +367,7 @@ document.addEventListener("visibilitychange",()=>{if(document.visibilityState===
 window.addEventListener("pagehide",()=>{sendPending(true);});
 renderAll();
 notice.hidden=online;saveTxt.textContent=online?"Conectando…":"Guardado en este navegador";
-if(online){
-  fetch(SHEETS_URL+"?action=read").then(r=>r.json()).then(d=>{
-    const f=(d&&d.fields)||{};
-    Object.keys(f).forEach(id=>{if(pending.has(id))return;try{state[id]=JSON.parse(f[id]);}catch(e){state[id]=f[id];}});
-    renderAll();persistLocal();
-    Object.keys(state).forEach(id=>{if(!(id in f)&&filled(state[id]))pending.add(id);});
-    if(pending.size)sendPending(false);else saveTxt.textContent="Todo guardado";
-  }).catch(()=>{saveTxt.textContent="Guardando en línea";});
-}
+if(online)saveTxt.textContent=Object.keys(state).length?"Sus respuestas guardadas":"Listo para guardar";
 
 /* Copy answers */
 function asText(){
